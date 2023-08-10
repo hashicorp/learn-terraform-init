@@ -1,5 +1,5 @@
 provider "docker" {
-  host = "unix:///home/user/.docker/desktop/docker.sock" // mention the docker socket
+  host = "unix:///home/shivam/.docker/desktop/docker.sock" // mention the docker socket
 }
 provider "random" {}
 
