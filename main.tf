@@ -1,4 +1,6 @@
-provider "docker" {}
+provider "docker" {
+  host = "unix:///home/shivam/.docker/desktop/docker.sock" // mention the docker socket
+}
 provider "random" {}
 
 resource "docker_image" "nginx" {
@@ -7,7 +9,7 @@ resource "docker_image" "nginx" {
 }
 
 resource "docker_container" "nginx" {
-  image = docker_image.nginx.latest
+  image = docker_image.nginx.name
   name  = "hello-terraform"
   ports {
     internal = 80
@@ -23,7 +25,7 @@ module "nginx-pet" {
   source = "./nginx"
 
   container_name = "hello-${random_pet.dog.id}"
-  nginx_port = 8001
+  nginx_port     = 8001
 }
 
 module "hello" {
@@ -32,5 +34,5 @@ module "hello" {
 
   hello = random_pet.dog.id
 
-	secret_key = "secret"
+  secret_key = "secret"
 }
