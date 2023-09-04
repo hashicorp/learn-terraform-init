@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "docker_image" "nginx" {
   name         = "nginx:latest"
   keep_locally = false
