@@ -1,36 +1,45 @@
-provider "docker" {}
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+provider "aws" {
+  region = var.region
+}
+
 provider "random" {}
 
-resource "docker_image" "nginx" {
-  name         = "nginx:latest"
-  keep_locally = false
-}
+data "aws_ami" "ubuntu" {
+  most_recent = true
 
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.repo_digest
-  name  = "hello-terraform"
-  ports {
-    internal = 80
-    external = 8000
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
   }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
 }
 
-resource "random_pet" "dog" {
+resource "random_pet" "instance" {
   length = 2
 }
 
-module "nginx-pet" {
-  source = "./nginx"
+module "ec2-instance" {
+  source = "./modules/aws-ec2-instance"
 
-  container_name = "hello-${random_pet.dog.id}"
-  nginx_port = 8001
+  ami_id        = data.aws_ami.ubuntu.id
+  instance_name = random_pet.instance.id
 }
 
 module "hello" {
   source  = "joatmon08/hello/random"
-  version = "3.0.1"
+  version = "4.0.0"
 
-  hello = random_pet.dog.id
+  hello        = "World"
+  second_hello = random_pet.instance.id
 
-	secret_key = "secret"
+  secret_key = "secret"
 }
