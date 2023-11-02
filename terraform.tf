@@ -10,7 +10,7 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.0.1"
+      version = "3.5.1"
     }
   }
   /* Uncomment this block to use Terraform Cloud for this tutorial
